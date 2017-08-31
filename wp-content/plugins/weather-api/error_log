@@ -1,0 +1,1 @@
+[11-Jun-2016 02:59:05] PHP Fatal error:  Call to undefined function  add_action() in /home2/aplaceg7/public_html/wp-content/plugins/weather-api/weather-api.php on line 23

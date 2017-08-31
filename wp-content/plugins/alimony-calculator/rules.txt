@@ -1,0 +1,25 @@
+if marriage < 6 years : 50% length of marriage duration for alimony payment
+if marriage > 6 but < 10 years: 60%
+if marriage is > 11 years < 16: 70% duration
+if marriage is >16 years < 20: 80% duration
+if marriage is > 20 years : indefinite
+
+Calculation of Maximum Alimony Order:
+John’s Gross Income	$125,000
+-	Jane’s Gross Income	$ 25,000
+=	$100,000
+x	35% 
+Suggested Annual Alimony CAP:	$ 35,000 from John to Jane
+
+
+Calculation of Maximum Alimony Duration:
+Length of Marriage	19 years
+x	80 %
+=	Suggested Maximum Duration:	15.2 years
+The deviation factors which could result in a different amount or duration are:
+Advanced age; chronic illness; or unusual health circumstances of either party;
+Tax considerations applicable to the parties;
+Whether the payor spouse is providing health insurance and the cost of heath insurance for the recipient spouse;
+Whether the payor spouse has been ordered to secure life insurance for the benefit of the recipient spouse and the cost of such insurance;
+Sources and amounts of unearned income, including capital gains, interest and dividends, annuity and investment income from assets that were not allocated in the parties divorce;
+

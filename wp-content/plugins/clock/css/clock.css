@@ -1,0 +1,50 @@
+#clock-box
+{
+	margin:0 auto;
+	width:200px;
+	height:200px;
+	background-image:url('../img/clockpng.png');
+	background-size:100%;
+	background-repeat: no-repeat;
+	position:relative;
+}
+
+#second
+{
+	width:10px;
+	height:75px;
+	position:absolute;
+	left:97px;
+	top:25px;
+	transform-origin:bottom;
+	-webkit-transform-origin:bottom;
+	-moz-transform-origin:bottom;
+	-o-transform-origin:bottom;
+}
+
+#minute
+{
+	width:10px;
+	height:90px;
+	left:97px;
+	top:10px;
+	transform-origin:bottom;
+	-webkit-transform-origin:bottom;
+	-moz-transform-origin:bottom;
+	-o-transform-origin:bottom;
+	position:absolute;
+	z-index:1;
+}
+#hour
+{
+	width:10px;
+	height:70px;
+	left:97px;
+	top:32px;
+	transform-origin:bottom;
+	-webkit-transform-origin:bottom;
+	-moz-transform-origin:bottom;
+	-o-transform-origin:bottom;
+	position:absolute;
+	z-index:2;
+}

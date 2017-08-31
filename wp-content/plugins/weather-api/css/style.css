@@ -1,0 +1,8 @@
+.weather-container
+{
+	border:1px white solid;
+	width:250px;
+	float:left;
+	margin-top:20px;
+}
+

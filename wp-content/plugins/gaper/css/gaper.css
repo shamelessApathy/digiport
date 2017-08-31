@@ -1,0 +1,269 @@
+.gaper
+{
+	display:block;
+	width:100%;
+	background-color: white;
+	border:5px red solid;
+	box-sizing:border-box;
+	-o-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	overflow-y:hidden;
+	overflow-x:hidden;
+}
+.controller
+{
+	width:300px;
+	height:150px;
+	border:1px green solid;
+	background:white;
+	margin:0 auto;
+}
+.dpad-container
+{
+	width:250px;
+	height:250px;
+	margin:0 auto;
+	position:relative;
+	background-image: url(../img/dpad.jpg);
+	display:none;
+}
+.dpad-container img
+{
+	margin:0 auto;
+}
+.dpad-square
+{
+	width:50px;
+	height:50px;
+	border:1px solid black;
+	position:absolute;
+}
+#dpad-up
+{
+	left:100px;
+	top:25px;
+}
+#dpad-down
+{
+	left:100px;
+	top:170px;
+}
+#dpad-left
+{
+	left:30px;
+	top:100px;
+}
+#dpad-right
+{
+	left:170px;
+	top:100px;
+}
+.controller-button
+{
+	width:100px;
+	height:50px;
+	background:blue;
+	position:relative;
+}
+#up-button
+{
+	float:left;
+	left:75px;
+}
+#left-button
+{
+	float:left;
+
+}
+.gaper-inner-container
+{
+	width:100%;
+	height:0;
+	padding-bottom: 56.25%;
+	position:relative;
+}
+
+.gaper-score
+{
+	font-size:24px;
+	background:white;
+	border:1px grey solid;
+	margin-top:5px;
+	margin-right:5px;
+}
+.lane
+{
+	width:100%;
+	height:60px;
+	position:relative;
+	border-bottom:1px solid black;
+}
+#play-again
+{
+	position:relative;
+	z-index:3;
+	display:none;
+	width:100px;
+	height:50px;
+	background:green;
+	float:left;
+	text-align:center;
+}
+#play-again:hover
+{
+	color:green;
+	background:white;
+	border:green 1px solid;
+		box-sizing:border-box;
+	-o-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+
+}
+.start
+{
+	background-image:url(../img/blacknwhite.png);
+	width:100%;
+	height:55px;
+	border-bottom:1px solid black;
+}
+#theGaper
+{
+	position:absolute;
+}
+#lodge
+{
+	margin:0 auto;
+	position:relative;
+	width:150px;
+	height:80px;
+	top:-20px;
+}
+#lodge img
+{
+	width:100%;
+	height:100%;
+	position:relative;
+}
+#laneTwo img
+{
+	width:50px;
+	height:50px;
+	position:relative;
+}#laneFour img
+{
+	width:50px;
+	height:50px;
+	position:relative;
+}
+.left
+{
+	float:left;
+}
+.right
+{
+	float:right;
+}
+.sprite
+{
+	position:absolute;
+	z-index:1;
+}
+.end
+{
+	width:100%;
+	height:100px;
+	border-bottom:1px solid black;
+}
+.end img
+{
+	margin:0 auto;
+	position:relative;
+}
+.dead
+{
+	height:50px;
+	width:125px;
+	color:black;
+	background:red;
+	z-index:1;
+	display:none;
+	position:relative;
+	float:left;
+}
+#you-win
+{
+	width:700px;
+	height:300px;
+	z-index:4;
+	top:100px;
+	left:150px;
+	position:absolute;
+	float:left;
+	border:2px solid black;
+	background:green;
+}
+#you-win p
+{
+	font-size:35px;
+	color:white;
+	text-align:center;
+	top:50px;
+	position:relative;
+}
+#anchor
+{
+	width:100%;
+	height:450px;
+	z-index:10;
+	background:white;
+	position:absolute;
+	display:none;
+}
+#next
+{
+	width:140px;
+	height:auto;
+	top:60px;
+	left:270px;
+	border:2px white solid;
+	position:relative;
+}
+#next:hover
+{
+	background:white;
+	color:green;
+}
+#next:hover p
+{
+	color:green;
+}
+
+#next p
+{
+	font-size:35px;
+	color:white;
+	position:relative;
+	top:10px;
+}
+.non-compatible
+{
+	display:none;
+}
+@media only screen and (max-width:900px)
+{
+	.gaper
+	{
+		display:none;
+		visibility:none;
+	}
+	.non-compatible
+	{
+		display:block;
+		width:500px;
+		height:200px;
+		margin:0 auto;
+		color:#000016;
+	}
+}
