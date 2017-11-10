@@ -11,15 +11,16 @@
  * @link    http://my.studiopress.com/themes/genesis/
  */
 
-if ( ! empty( $_SERVER['SCRIPT_FILENAME'] ) && 'comments.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) )
+if ( ! empty( $_SERVER['SCRIPT_FILENAME'] ) && 'comments.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) {
 	die ( 'Please do not load this page directly. Thanks!' );
+}
 
 if ( post_password_required() ) {
 	printf( '<p class="alert">%s</p>', __( 'This post is password protected. Enter the password to view comments.', 'genesis' ) );
 	return;
 }
 
-//* Output semantically correct header if accessibility is supported
+// Output semantically correct header if accessibility is supported.
 if ( genesis_a11y( 'headings' ) ) {
 	printf( '<h2 class="screen-reader-text">%s</h2>', __( 'Reader Interactions', 'genesis' ) );
 }

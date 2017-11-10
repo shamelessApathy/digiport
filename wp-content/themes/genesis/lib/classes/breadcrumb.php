@@ -39,13 +39,13 @@ class Genesis_Breadcrumb {
 	 */
 	public function __construct() {
 
-		//* Default arguments
+		// Default arguments.
 		$this->args = array(
 			'home'                    => __( 'Home', 'genesis' ),
 			'sep'                     => __( ' <span aria-label="breadcrumb separator">/</span> ', 'genesis' ),
 			'list_sep'                => ', ',
-			'prefix'                  => sprintf( '<div %s>', genesis_attr( 'breadcrumb' ) ),
-			'suffix'                  => '</div>',
+			'prefix'                  => genesis_markup( array( 'open' => '<div %s>', 'context' => 'breadcrumb', 'echo' => false ) ),
+			'suffix'                  => genesis_markup( array( 'close' => '</div>', 'echo' => false ) ),
 			'heirarchial_attachments' => true,
 			'heirarchial_categories'  => true,
 			'labels' => array(
@@ -68,8 +68,8 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param array $args Breadcrumb arguments
-	 * @return string HTML markup
+	 * @param array $args Breadcrumb arguments.
+	 * @return string HTML markup for final completed markup.
 	 */
 	public function get_output( $args = array() ) {
 
@@ -103,7 +103,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param array $args Breadcrumb arguments
+	 * @param array $args Breadcrumb arguments.
 	 */
 	public function output( $args = array() ) {
 
@@ -116,24 +116,25 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for the crumbs, combined together.
 	 */
 	protected function build_crumbs() {
 
 		$crumbs[] = $this->get_home_crumb();
 
-		if ( is_home() )
+		if ( is_home() ) {
 			$crumbs[] = $this->get_blog_crumb();
-		elseif ( is_search() )
+		} elseif ( is_search() ) {
 			$crumbs[] = $this->get_search_crumb();
-		elseif ( is_404() )
+		} elseif ( is_404() ) {
 			$crumbs[] = $this->get_404_crumb();
-		elseif ( is_page() )
+		} elseif ( is_page() ) {
 			$crumbs[] = $this->get_page_crumb();
-		elseif ( is_archive() )
+		} elseif ( is_archive() ) {
 			$crumbs[] = $this->get_archive_crumb();
-		elseif ( is_singular() )
+		} elseif ( is_singular() ) {
 			$crumbs[] = $this->get_single_crumb();
+		}
 
 		/**
 		 * Filter the Genesis breadcrumbs.
@@ -145,7 +146,7 @@ class Genesis_Breadcrumb {
 		 */
 		$crumbs = apply_filters( 'genesis_build_crumbs', $crumbs, $this->args );
 
-		return join( $this->args['sep'], array_filter( array_unique( $crumbs ) ) );
+		return implode( $this->args['sep'], array_filter( array_unique( $crumbs ) ) );
 
 	}
 
@@ -154,26 +155,27 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for archive breadcrumb.
 	 */
 	protected function get_archive_crumb() {
 
-		if ( is_category() )
+		if ( is_category() ) {
 			$crumb = $this->get_category_crumb();
-		elseif ( is_tag() )
+		} elseif ( is_tag() ) {
 			$crumb = $this->get_tag_crumb();
-		elseif ( is_tax() )
+		} elseif ( is_tax() ) {
 			$crumb = $this->get_tax_crumb();
-		elseif ( is_year() )
+		} elseif ( is_year() ) {
 			$crumb = $this->get_year_crumb();
-		elseif ( is_month() )
+		} elseif ( is_month() ) {
 			$crumb = $this->get_month_crumb();
-		elseif ( is_day() )
+		} elseif ( is_day() ) {
 			$crumb = $this->get_day_crumb();
-		elseif ( is_author() )
+		} elseif ( is_author() ) {
 			$crumb = $this->get_author_crumb();
-		elseif ( is_post_type_archive() )
+		} elseif ( is_post_type_archive() ) {
 			$crumb = $this->get_post_type_crumb();
+		}
 
 		/**
 		 * Filter the Genesis archive breadcrumb.
@@ -192,7 +194,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for single breadcrumb, including any parent breadcrumbs.
 	 */
 	protected function get_single_crumb() {
 
@@ -223,7 +225,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for home breadcrumb.
 	 */
 	protected function get_home_crumb() {
 
@@ -250,13 +252,14 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for blog posts page breadcrumb.
 	 */
 	protected function get_blog_crumb() {
 
 		$crumb = $this->get_home_crumb();
-		if ( $this->page_shown_on_front() )
+		if ( $this->page_shown_on_front() ) {
 			$crumb = get_the_title( get_option( 'page_for_posts' ) );
+		}
 
 		/**
 		 * Filter the Genesis blog posts breadcrumb.
@@ -275,7 +278,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for search results page breadcrumb.
 	 */
 	protected function get_search_crumb() {
 
@@ -298,7 +301,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for 404 (page not found) breadcrumb.
 	 */
 	protected function get_404_crumb() {
 
@@ -323,27 +326,28 @@ class Genesis_Breadcrumb {
 	 *
 	 * @global WP_Query $wp_query Query object.
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a page breadcrumb.
 	 */
 	protected function get_page_crumb() {
 
 		global $wp_query;
 
 		if ( $this->page_shown_on_front() && is_front_page() ) {
-			//* Don't do anything - we're on the front page and we've already dealt with that elsewhere
+			// Don't do anything - we're on the front page and we've already dealt with that elsewhere.
 			$crumb = $this->get_home_crumb();
 		} else {
 			$post = $wp_query->get_queried_object();
 
-			//* If this is a top level Page, it's simple to output the breadcrumb
+			// If this is a top level Page, it's simple to output the breadcrumb.
 			if ( ! $post->post_parent ) {
 				$crumb = get_the_title();
 			} else {
 				if ( isset( $post->ancestors ) ) {
-					if ( is_array( $post->ancestors ) )
+					if ( is_array( $post->ancestors ) ) {
 						$ancestors = array_values( $post->ancestors );
-					else
+					} else {
 						$ancestors = array( $post->ancestors );
+					}
 				} else {
 					$ancestors = array( $post->post_parent );
 				}
@@ -360,10 +364,10 @@ class Genesis_Breadcrumb {
 					);
 				}
 
-				//* Add the current page title
+				// Add the current page title.
 				$crumbs[] = get_the_title( $post->ID );
 
-				$crumb = join( $this->args['sep'], $crumbs );
+				$crumb = implode( $this->args['sep'], $crumbs );
 			}
 		}
 
@@ -384,7 +388,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return string HTML markup.
+	 * @return string HTML markup for a single attachment breadcrumb, including any parent breadcrumbs.
 	 */
 	protected function get_attachment_crumb() {
 
@@ -392,7 +396,7 @@ class Genesis_Breadcrumb {
 
 		$crumb = '';
 		if ( $this->args['heirarchial_attachments'] ) {
-			//* If showing attachment parent
+			// If showing attachment parent.
 			$attachment_parent = get_post( $post->post_parent );
 			$crumb = $this->get_breadcrumb_link(
 				get_permalink( $post->post_parent ),
@@ -403,7 +407,15 @@ class Genesis_Breadcrumb {
 		}
 		$crumb .= single_post_title( '', false );
 
-		return $crumb;
+		/**
+		 * Filter the Genesis attachment breadcrumb.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param string $crumb HTML markup for the attachment breadcrumb.
+		 * @param array  $args  Arguments used to generate the breadcrumbs. Documented in Genesis_Breadcrumbs::get_output().
+		 */
+		return apply_filters( 'genesis_attachment_crumb', $crumb, $this->args );
 
 	}
 
@@ -412,19 +424,21 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return string HTML markup.
+	 * @return string HTML markup for a single post breadcrumb, including any parent (category) breadcrumbs.
 	 */
 	protected function get_post_crumb() {
 
 		$categories = get_the_category();
 
+		$cat_crumb = '';
+
 		if ( 1 === count( $categories ) ) {
-			//* If in single category, show it, and any parent categories
-			$crumb = $this->get_term_parents( $categories[0]->cat_ID, 'category', true ) . $this->args['sep'];
+			// If in single category, show it, and any parent categories.
+			$cat_crumb = $this->get_term_parents( $categories[0]->cat_ID, 'category', true ) . $this->args['sep'];
 		}
 		if ( count( $categories ) > 1 ) {
 			if ( ! $this->args['heirarchial_categories'] ) {
-				//* Don't show parent categories (unless the post happen to be explicitly in them)
+				// Don't show parent categories (unless the post happen to be explicitly in them).
 				foreach ( $categories as $category ) {
 					$crumbs[] = $this->get_breadcrumb_link(
 						get_category_link( $category->term_id ),
@@ -432,20 +446,32 @@ class Genesis_Breadcrumb {
 						$category->name
 					);
 				}
-				$crumb = join( $this->args['list_sep'], $crumbs ) . $this->args['sep'];
+				$cat_crumb = implode( $this->args['list_sep'], $crumbs ) . $this->args['sep'];
 			} else {
-				//* Show parent categories - see if one is marked as primary and try to use that
-				$primary_category_id = get_post_meta( get_the_ID(), '_category_permalink', true ); //* Support for sCategory Permalink plugin
+				// Show parent categories - see if one is marked as primary and try to use that.
+				$primary_category_id = get_post_meta( get_the_ID(), '_category_permalink', true ); // Support for sCategory Permalink plugin.
+				if ( ! $primary_category_id && function_exists( 'yoast_get_primary_term_id' ) ) {
+					// Support for Yoast SEO plugin, even if the Yoast Breadcrumb feature is not enabled.
+					$primary_category_id = yoast_get_primary_term_id();
+				}
 				if ( $primary_category_id ) {
-					$crumb = $this->get_term_parents( $primary_category_id, 'category', true ) . $this->args['sep'];
+					$cat_crumb = $this->get_term_parents( $primary_category_id, 'category', true ) . $this->args['sep'];
 				} else {
-					$crumb = $this->get_term_parents( $categories[0]->cat_ID, 'category', true ) . $this->args['sep'];
+					$cat_crumb = $this->get_term_parents( $categories[0]->cat_ID, 'category', true ) . $this->args['sep'];
 				}
 			}
 		}
-		$crumb .= single_post_title( '', false );
+		$crumb = $cat_crumb . single_post_title( '', false );
 
-		return $crumb;
+		/**
+		 * Filter the Genesis post breadcrumb.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param string $crumb HTML markup for the post breadcrumb.
+		 * @param array  $args  Arguments used to generate the breadcrumbs. Documented in Genesis_Breadcrumbs::get_output().
+		 */
+		return apply_filters( 'genesis_post_crumb', $crumb, $this->args, $cat_crumb );
 
 	}
 
@@ -454,14 +480,16 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return string HTML markup.
+	 * @return string HTML markup for a single custom post type entry breadcrumb, including
+	 *                any parent (CPT name) breadcrumbs.
 	 */
 	protected function get_cpt_crumb() {
 
 		$post_type = get_query_var( 'post_type' );
 		$post_type_object = get_post_type_object( $post_type );
 
-		if ( $cpt_archive_link = get_post_type_archive_link( $post_type ) ) {
+		$cpt_archive_link = get_post_type_archive_link( $post_type );
+		if ( $cpt_archive_link ) {
 			$crumb = $this->get_breadcrumb_link(
 				$cpt_archive_link,
 				'',
@@ -473,7 +501,15 @@ class Genesis_Breadcrumb {
 
 		$crumb .= $this->args['sep'] . single_post_title( '', false );
 
-		return $crumb;
+		/**
+		 * Filter the Genesis CPT breadcrumb.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param string $crumb HTML markup for the CPT breadcrumb.
+		 * @param array  $args  Arguments used to generate the breadcrumbs. Documented in Genesis_Breadcrumbs::get_output().
+		 */
+		return apply_filters( 'genesis_cpt_crumb', $crumb, $this->args );
 
 	}
 
@@ -482,7 +518,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.9.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a category archive breadcrumb.
 	 */
 	protected function get_category_crumb() {
 
@@ -505,7 +541,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.9.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a tag archive breadcrumb.
 	 */
 	protected function get_tag_crumb() {
 
@@ -530,7 +566,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @global WP_Query $wp_query Query object.
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a taxonomy archive breadcrumb.
 	 */
 	protected function get_tax_crumb() {
 
@@ -556,7 +592,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.9.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a year archive breadcrumb.
 	 */
 	protected function get_year_crumb() {
 
@@ -581,7 +617,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.9.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a month archive breadcrumb.
 	 */
 	protected function get_month_crumb() {
 
@@ -616,7 +652,7 @@ class Genesis_Breadcrumb {
 	 *                          auto-translated name of the month for month or
 	 *                          day archives.
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a day archive breadcrumb.
 	 */
 	protected function get_day_crumb() {
 
@@ -659,7 +695,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @global WP_Query $wp_query Query object.
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for an author archive breadcrumb.
 	 */
 	protected function get_author_crumb() {
 
@@ -684,7 +720,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.9.0
 	 *
-	 * @return string HTML markup
+	 * @return string HTML markup for a post type archive breadcrumb.
 	 */
 	protected function get_post_type_crumb() {
 
@@ -707,18 +743,20 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param int $parent_id Initial ID of object to get parents of
-	 * @param string $taxonomy Name of the taxnomy. May be 'category', 'post_tag' or something custom
-	 * @param boolean $link Whether to link last item in chain. Default false
-	 * @param array $visited Array of IDs already included in the chain
-	 * @return string HTML markup of crumbs
+	 * @param int    $parent_id Initial ID of object to get parents of.
+	 * @param string $taxonomy  Name of the taxonomy. May be 'category', 'post_tag' or something custom.
+	 * @param bool   $link      Whether to link last item in chain. Default false.
+	 * @param array  $visited   Array of IDs already included in the chain.
+	 *
+	 * @return string HTML markup of recursive linked crumbs of category, tag or custom taxonomy parents.
 	 */
 	protected function get_term_parents( $parent_id, $taxonomy, $link = false, array $visited = array() ) {
 
 		$parent = get_term( (int)$parent_id, $taxonomy );
 
-		if ( is_wp_error( $parent ) )
+		if ( is_wp_error( $parent ) ) {
 			return array();
+		}
 
 		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && ! in_array( $parent->parent, $visited ) ) {
 			$visited[] = $parent->parent;
@@ -735,7 +773,7 @@ class Genesis_Breadcrumb {
 			$chain[] = $parent->name;
 		}
 
-		return join( $this->args['sep'], $chain );
+		return implode( $this->args['sep'], $chain );
 
 	}
 
@@ -744,16 +782,16 @@ class Genesis_Breadcrumb {
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param string $url     URL for href attribute.
-	 * @param string $title   Title attribute.
-	 * @param string $content Linked content.
-	 * @param string $sep     Separator.
+	 * @param string      $url     URL for href attribute.
+	 * @param string      $title   Title attribute.
+	 * @param string      $content Linked content.
+	 * @param bool|string $sep     Optional. Separator. Default is empty string.
 	 *
 	 * @return string HTML markup for anchor link and optional separator.
 	 */
-	protected function get_breadcrumb_link( $url, $title, $content, $sep = false ) {
+	protected function get_breadcrumb_link( $url, $title, $content, $sep = '' ) {
 
-		//* Empty title, for backward compatibility
+		// Empty title, for backward compatibility.
 		$title = '';
 
 		$itemprop_item = genesis_html5() ? ' itemprop="item"' : '';

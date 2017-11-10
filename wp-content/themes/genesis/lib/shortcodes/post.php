@@ -21,30 +21,37 @@ add_shortcode( 'post_date', 'genesis_post_date_shortcode' );
  *   format (date format, default is value in date_format option field),
  *   label (text following 'before' output, but before date).
  *
- * Output passes through 'genesis_post_date_shortcode' filter before returning.
+ * Output passes through `genesis_post_date_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Output for `post_date` shortcode.
  */
 function genesis_post_date_shortcode( $atts ) {
 
 	$defaults = array(
-		'after'  => '',
-		'before' => '',
-		'format' => get_option( 'date_format' ),
-		'label'  => '',
+		'after'          => '',
+		'before'         => '',
+		'format'         => get_option( 'date_format' ),
+		'label'          => '',
+		'relative_depth' => 2,
 	);
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_date' );
 
-	$display = ( 'relative' === $atts['format'] ) ? genesis_human_time_diff( get_the_time( 'U' ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'genesis' ) : get_the_time( $atts['format'] );
+	if ( 'relative' === $atts['format'] ) {
+		$display = genesis_human_time_diff( get_the_time( 'U' ), current_time( 'timestamp' ), $atts['relative_depth'] );
+		$display .= ' ' . __( 'ago', 'genesis' );
+	} else {
+		$display = get_the_time( $atts['format'] );
+	}
 
-	if ( genesis_html5() )
+	if ( genesis_html5() ) {
 		$output = sprintf( '<time %s>', genesis_attr( 'entry-time' ) ) . $atts['before'] . $atts['label'] . $display . $atts['after'] . '</time>';
-	else
+	} else {
 		$output = sprintf( '<span class="date published time" title="%5$s">%1$s%3$s%4$s%2$s</span> ', $atts['before'], $atts['after'], $atts['label'], $display, get_the_time( 'c' ) );
+	}
 
 	return apply_filters( 'genesis_post_date_shortcode', $output, $atts );
 
@@ -60,12 +67,12 @@ add_shortcode( 'post_time', 'genesis_post_time_shortcode' );
  *   format (date format, default is value in date_format option field),
  *   label (text following 'before' output, but before date).
  *
- * Output passes through 'genesis_post_time_shortcode' filter before returning.
+ * Output passes through `genesis_post_time_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Output for `post_time` shortcode`.
  */
 function genesis_post_time_shortcode( $atts ) {
 
@@ -78,10 +85,11 @@ function genesis_post_time_shortcode( $atts ) {
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_time' );
 
-	if ( genesis_html5() )
+	if ( genesis_html5() ) {
 		$output = sprintf( '<time %s>', genesis_attr( 'entry-time' ) ) . $atts['before'] . $atts['label'] . get_the_time( $atts['format'] ) . $atts['after'] . '</time>';
-	else
+	} else {
 		$output = sprintf( '<span class="date published time" title="%5$s">%1$s%3$s%4$s%2$s</span> ', $atts['before'], $atts['after'], $atts['label'], get_the_time( $atts['format'] ), get_the_time( 'c' ) );
+	}
 
 	return apply_filters( 'genesis_post_time_shortcode', $output, $atts );
 
@@ -97,25 +105,31 @@ add_shortcode( 'post_modified_date', 'genesis_post_modified_date_shortcode' );
  *  * format (date format, default is value in date_format option field),
  *  * label (text following 'before' output, but before date).
  *
- * Output passes through 'genesis_post_modified_date_shortcode' filter before returning.
+ * Output passes through `genesis_post_modified_date_shortcode` filter before returning.
  *
  * @since 2.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Output for `post_modified_date` shortcode.
  */
 function genesis_post_modified_date_shortcode( $atts ) {
 
 	$defaults = array(
-		'after'  => '',
-		'before' => '',
-		'format' => get_option( 'date_format' ),
-		'label'  => '',
+		'after'          => '',
+		'before'         => '',
+		'format'         => get_option( 'date_format' ),
+		'label'          => '',
+		'relative_depth' => 2,
 	);
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_modified_date' );
 
-	$display = ( 'relative' === $atts['format'] ) ? genesis_human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'genesis' ) : get_the_modified_time( $atts['format'] );
+	if ( 'relative' === $atts['format'] ) {
+		$display = genesis_human_time_diff( get_the_modified_time( 'U' ), current_time( 'timestamp' ), $atts['relative_depth'] );
+		$display .= ' ' . __( 'ago', 'genesis' );
+	} else {
+		$display = get_the_modified_time( $atts['format'] );
+	}
 
 	if ( genesis_html5() ) {
 		$output = sprintf( '<time %s>', genesis_attr( 'entry-modified-time' ) ) . $atts['before'] . $atts['label'] . $display . $atts['after'] . '</time>';
@@ -129,8 +143,8 @@ function genesis_post_modified_date_shortcode( $atts ) {
 	 * @since 2.1.0
 	 *
 	 * @param string $output Markup containing post last modification date.
-	 * @param array $atts {
-	 *     Shortcode attributes after mergining with default values.
+	 * @param array  $atts {
+	 *     Shortcode attributes after merging with default values.
 	 *
 	 *     @type string $after Output after date.
 	 *     @type string $before Output before date.
@@ -152,12 +166,12 @@ add_shortcode( 'post_modified_time', 'genesis_post_modified_time_shortcode' );
  *  * format (date format, default is value in date_format option field),
  *  * label (text following 'before' output, but before time).
  *
- * Output passes through 'genesis_post_modified_time_shortcode' filter before returning.
+ * Output passes through `genesis_post_modified_time_shortcode` filter before returning.
  *
  * @since 2.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Output for `post_modified_time` shortcode.
  */
 function genesis_post_modified_time_shortcode( $atts ) {
 
@@ -182,8 +196,8 @@ function genesis_post_modified_time_shortcode( $atts ) {
 	 * @since 2.1.0
 	 *
 	 * @param string $output Markup containing post last modification time.
-	 * @param array $atts {
-	 *     Shortcode attributes after mergining with default values.
+	 * @param array  $atts {
+	 *     Shortcode attributes after merging with default values.
 	 *
 	 *     @type string $after Output after time.
 	 *     @type string $before Output before time.
@@ -203,14 +217,25 @@ add_shortcode( 'post_author', 'genesis_post_author_shortcode' );
  *   after (output after link, default is empty string),
  *   before (output before link, default is empty string).
  *
- * Output passes through 'genesis_post_author_shortcode' filter before returning.
+ * Output passes through `genesis_post_author_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Return empty string if post type does not support `author`, or has no author assigned.
+ *                Otherwise, output for `post_author` shortcode.
  */
 function genesis_post_author_shortcode( $atts ) {
+
+	if ( ! post_type_supports( get_post_type(), 'author' ) ) {
+		return '';
+	}
+
+	$author = get_the_author();
+
+	if ( ! $author ) {
+		return '';
+	}
 
 	$defaults = array(
 		'after'  => '',
@@ -218,8 +243,6 @@ function genesis_post_author_shortcode( $atts ) {
 	);
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author' );
-
-	$author = get_the_author();
 
 	if ( genesis_html5() ) {
 		$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
@@ -243,14 +266,33 @@ add_shortcode( 'post_author_link', 'genesis_post_author_link_shortcode' );
  *   after (output after link, default is empty string),
  *   before (output before link, default is empty string).
  *
- * Output passes through 'genesis_post_author_link_shortcode' filter before returning.
+ * Output passes through `genesis_post_author_link_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Return empty string if post type does not support `author` or post has no author assigned.
+ *                Return `genesis_post_author_shortcode()` if author has no URL.
+ *                Otherwise, output for `post_author_link` shortcode.
  */
 function genesis_post_author_link_shortcode( $atts ) {
+
+	if ( ! post_type_supports( get_post_type(), 'author' ) ) {
+		return '';
+	}
+
+	$url = get_the_author_meta( 'url' );
+
+	// If no URL, use post author shortcode function.
+	if ( ! $url ) {
+		return genesis_post_author_shortcode( $atts );
+	}
+
+	$author = get_the_author();
+
+	if ( ! $author ) {
+		return '';
+	}
 
 	$defaults = array(
 		'after'    => '',
@@ -258,14 +300,6 @@ function genesis_post_author_link_shortcode( $atts ) {
 	);
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author_link' );
-
-	$url = get_the_author_meta( 'url' );
-
-	//* If no url, use post author shortcode function.
-	if ( ! $url )
-		return genesis_post_author_shortcode( $atts );
-
-	$author = get_the_author();
 
 	if ( genesis_html5() ) {
 		$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
@@ -291,14 +325,25 @@ add_shortcode( 'post_author_posts_link', 'genesis_post_author_posts_link_shortco
  *   after (output after link, default is empty string),
  *   before (output before link, default is empty string).
  *
- * Output passes through 'genesis_post_author_posts_link_shortcode' filter before returning.
+ * Output passes through `genesis_post_author_posts_link_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Return empty string if post type does not support `author` or post has no author assigned.
+ *                Otherwise, output for `post_author_posts_link` shortcode.
  */
 function genesis_post_author_posts_link_shortcode( $atts ) {
+
+	if ( ! post_type_supports( get_post_type(), 'author' ) ) {
+		return '';
+	}
+
+	$author = get_the_author();
+
+	if ( ! $author ) {
+		return '';
+	}
 
 	$defaults = array(
 		'after'  => '',
@@ -307,8 +352,7 @@ function genesis_post_author_posts_link_shortcode( $atts ) {
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author_posts_link' );
 
-	$author = get_the_author();
-	$url    = get_author_posts_url( get_the_author_meta( 'ID' ) );
+	$url = get_author_posts_url( get_the_author_meta( 'ID' ) );
 
 	if ( genesis_html5() ) {
 		$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
@@ -339,14 +383,20 @@ add_shortcode( 'post_comments', 'genesis_post_comments_shortcode' );
  *   one (text when there is exactly one comment, default is '1 Comment'),
  *   zero (text when there are no comments, default is 'Leave a Comment').
  *
- * Output passes through 'genesis_post_comments_shortcode' filter before returning.
+ * Output passes through `genesis_post_comments_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Return empty string if post does not support `comments`, or `hide_if_off` is enabled and
+ *                comments are closed or disabled in Genesis theme settings.
+ *                Otherwise, output for `post_comments` shortcode.
  */
 function genesis_post_comments_shortcode( $atts ) {
+
+	if ( ! post_type_supports( get_post_type(), 'comments' ) ) {
+		return '';
+	}
 
 	$defaults = array(
 		'after'       => '',
@@ -358,8 +408,9 @@ function genesis_post_comments_shortcode( $atts ) {
 	);
 	$atts = shortcode_atts( $defaults, $atts, 'post_comments' );
 
-	if ( ( ! genesis_get_option( 'comments_posts' ) || ! comments_open() ) && 'enabled' === $atts['hide_if_off'] )
-		return;
+	if ( 'enabled' === $atts['hide_if_off'] && ( ! genesis_get_option( 'comments_posts' ) || ! comments_open() ) ) {
+		return '';
+	}
 
 	// Darn you, WordPress!
 	ob_start();
@@ -369,9 +420,11 @@ function genesis_post_comments_shortcode( $atts ) {
 	$comments = sprintf( '<a href="%s">%s</a>', get_comments_link(), $comments );
 
 	$output = genesis_markup( array(
-		'html5' => '<span class="entry-comments-link">' . $atts['before'] . $comments . $atts['after'] . '</span>',
-		'xhtml' => '<span class="post-comments">' . $atts['before'] . $comments . $atts['after'] . '</span>',
-		'echo'  => false,
+		'open'    => '<span class="entry-comments-link">',
+		'close'   => '</span>',
+		'content' => $atts['before'] . $comments . $atts['after'],
+		'context' => 'comments-shortcode',
+		'echo'    => false,
 	) );
 
 	return apply_filters( 'genesis_post_comments_shortcode', $output, $atts );
@@ -387,12 +440,12 @@ add_shortcode( 'post_tags', 'genesis_post_tags_shortcode' );
  *   before (output before link, default is 'Tagged With: '),
  *   sep (separator string between tags, default is ', ').
  *
- * Output passes through 'genesis_post_tags_shortcode' filter before returning.
+ * Output passes through `genesis_post_tags_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Return empty string if the post has no tags. Otherwise, output for `post_tags` shortcode.
  */
 function genesis_post_tags_shortcode( $atts ) {
 
@@ -405,14 +458,16 @@ function genesis_post_tags_shortcode( $atts ) {
 
 	$tags = get_the_tag_list( $atts['before'], trim( $atts['sep'] ) . ' ', $atts['after'] );
 
-	//* Do nothing if no tags
-	if ( ! $tags )
-		return;
+	// Do nothing if no tags.
+	if ( ! $tags ) {
+		return '';
+	}
 
-	if ( genesis_html5() )
+	if ( genesis_html5() ) {
 		$output = sprintf( '<span %s>', genesis_attr( 'entry-tags' ) ) . $tags . '</span>';
-	else
+	} else {
 		$output = '<span class="tags">' . $tags . '</span>';
+	}
 
 	return apply_filters( 'genesis_post_tags_shortcode', $output, $atts );
 
@@ -432,7 +487,9 @@ add_shortcode( 'post_categories', 'genesis_post_categories_shortcode' );
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ *
+ * @return string Return empty string if the post has no categories.
+ *                Otherwise, output for `post_categories` shortcode.
  */
 function genesis_post_categories_shortcode( $atts ) {
 
@@ -446,15 +503,16 @@ function genesis_post_categories_shortcode( $atts ) {
 
 	$cats = get_the_category_list( trim( $atts['sep'] ) . ' ' );
 
-	//* Do nothing if no cats
+	// Do nothing if there are no categories.
 	if ( ! $cats ) {
 		return '';
 	}
 
-	if ( genesis_html5() )
+	if ( genesis_html5() ) {
 		$output = sprintf( '<span %s>', genesis_attr( 'entry-categories' ) ) . $atts['before'] . $cats . $atts['after'] . '</span>';
-	else
+	} else {
 		$output = '<span class="categories">' . $atts['before'] . $cats . $atts['after'] . '</span>';
+	}
 
 	return apply_filters( 'genesis_post_categories_shortcode', $output, $atts );
 
@@ -470,12 +528,12 @@ add_shortcode( 'post_terms', 'genesis_post_terms_shortcode' );
  *   sep (separator string between tags, default is ', '),
  *    taxonomy (name of the taxonomy, default is 'category').
  *
- * Output passes through 'genesis_post_terms_shortcode' filter before returning.
+ * Output passes through `genesis_post_terms_shortcode` filter before returning.
  *
  * @since 1.6.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string|boolean Shortcode output or false on failure to retrieve terms
+ * @return string Output for `post_terms` shortcode, or empty string on failure to retrieve terms.
  */
 function genesis_post_terms_shortcode( $atts ) {
 
@@ -501,16 +559,19 @@ function genesis_post_terms_shortcode( $atts ) {
 
 	$terms = get_the_term_list( get_the_ID(), $atts['taxonomy'], $atts['before'], trim( $atts['sep'] ) . ' ', $atts['after'] );
 
-	if ( is_wp_error( $terms ) )
-			return;
+	if ( is_wp_error( $terms ) ) {
+			return '';
+	}
 
-	if ( empty( $terms ) )
-			return;
+	if ( empty( $terms ) ) {
+			return '';
+	}
 
-	if ( genesis_html5() )
+	if ( genesis_html5() ) {
 		$output = sprintf( '<span %s>', genesis_attr( 'entry-terms' ) ) . $terms . '</span>';
-	else
+	} else {
 		$output = '<span class="terms">' . $terms . '</span>';
+	}
 
 	return apply_filters( 'genesis_post_terms_shortcode', $output, $terms, $atts );
 
@@ -525,17 +586,18 @@ add_shortcode( 'post_edit', 'genesis_post_edit_shortcode' );
  *   before (output before link, default is 'Tagged With: '),
  *   link (link text, default is '(Edit)').
  *
- * Output passes through 'genesis_post_edit_shortcode' filter before returning.
+ * Output passes through `genesis_post_edit_shortcode` filter before returning.
  *
  * @since 1.1.0
  *
  * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Shortcode output
+ * @return string Output for `post_edit` shortcode, or empty string if `genesis_edit_post_link` filter returns `false`.
  */
 function genesis_post_edit_shortcode( $atts ) {
 
-	if ( ! apply_filters( 'genesis_edit_post_link', true ) )
-		return;
+	if ( ! apply_filters( 'genesis_edit_post_link', true ) ) {
+		return '';
+	}
 
 	$defaults = array(
 		'after'  => '',
@@ -545,7 +607,7 @@ function genesis_post_edit_shortcode( $atts ) {
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_edit' );
 
-	//* Darn you, WordPress!
+	// Darn you, WordPress!
 	ob_start();
 	edit_post_link( $atts['link'], $atts['before'], $atts['after'] );
 	$edit = ob_get_clean();

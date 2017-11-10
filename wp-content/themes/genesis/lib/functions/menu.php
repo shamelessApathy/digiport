@@ -17,18 +17,19 @@
  * @since 1.8.0
  *
  * @param string $menu Name of the menu to check support for.
- *
- * @return boolean True if menu supported, false otherwise.
+ * @return bool `true` if menu supported, `false` otherwise.
  */
 function genesis_nav_menu_supported( $menu ) {
 
-	if ( ! current_theme_supports( 'genesis-menus' ) )
+	if ( ! current_theme_supports( 'genesis-menus' ) ) {
 		return false;
+	}
 
 	$menus = get_theme_support( 'genesis-menus' );
 
-	if ( array_key_exists( $menu, (array) $menus[0] ) )
+	if ( array_key_exists( $menu, (array) $menus[0] ) ) {
 		return true;
+	}
 
 	return false;
 
@@ -42,10 +43,7 @@ function genesis_nav_menu_supported( $menu ) {
  *
  * @since 1.9.0
  *
- * @uses genesis_html5()      Check for HTML5 support.
- * @uses genesis_get_option() Get Theme settings value.
- *
- * @return boolean True if Superfish is enabled, false otherwise.
+ * @return bool `true` if Superfish is enabled, `false` otherwise.
  */
 function genesis_superfish_enabled() {
 
@@ -57,17 +55,13 @@ function genesis_superfish_enabled() {
  * Return the markup to display a menu consistent with the Genesis format.
  *
  * Applies the `genesis_$location_nav` filter e.g. `genesis_header_nav`. For primary and secondary menu locations, it
- * also applies the `genesis_do_nav` and `genesis_do_subnav` filters for backwards compatibility.
+ * applies the `genesis_do_nav` and `genesis_do_subnav` filters instead for backwards compatibility.
  *
  * @since 2.1.0
  *
- * @uses genesis_markup()             Contextual markup.
- * @uses genesis_html5()              Check for HTML5 support.
- * @uses genesis_structural_wrap()    Adds optional internal wrap divs.
- *
- * @param string $args Menu arguments.
- *
- * @return string Navigation menu markup.
+ * @param string|array $args Menu arguments.
+ * @return string|null Navigation menu markup, or `null` if menu is not assigned to theme location, there is
+ *                     no menu, or there are no menu items in the menu.
  */
 function genesis_get_nav_menu( $args = array() ) {
 
@@ -75,49 +69,56 @@ function genesis_get_nav_menu( $args = array() ) {
 		'theme_location' => '',
 		'container'      => '',
 		'menu_class'     => 'menu genesis-nav-menu',
-		'link_before'    => genesis_html5() ? sprintf( '<span %s>', genesis_attr( 'nav-link-wrap' ) ) : '',
-		'link_after'     => genesis_html5() ? '</span>' : '',
+		'link_before'    => genesis_markup( array( 
+					'open'    => '<span %s>',
+					'context' => 'nav-link-wrap',
+					'echo'    => false,
+				) ),
+		'link_after'     => genesis_markup( array( 
+					'close'   => '</span>',
+					'context' => 'nav-link-wrap',
+					'echo'    => false,
+				) ),
 		'echo'           => 0,
 	) );
 
-	//* If a menu is not assigned to theme location, abort
+	// If a menu is not assigned to theme location, abort.
 	if ( ! has_nav_menu( $args['theme_location'] ) ) {
-		return;
+		return null;
+	}
+
+	// If genesis-accessibility for 'drop-down-menu' is enabled and the menu doesn't already have the superfish class, add it.
+	if ( genesis_superfish_enabled() && false === strpos( $args['menu_class'], 'js-superfish' ) ) {
+		$args['menu_class'] .= ' js-superfish';
 	}
 
 	$sanitized_location = sanitize_key( $args['theme_location'] );
 
 	$nav = wp_nav_menu( $args );
 
-	//* Do nothing if there is nothing to show
+	// Do nothing if there is nothing to show.
 	if ( ! $nav ) {
-		return;
+		return null;
 	}
 
-	$xhtml_id = $args['theme_location'];
-
-	if ( 'primary' === $args['theme_location'] ) {
-		$xhtml_id = 'nav';
-	} elseif ( 'secondary' === $args['theme_location'] ) {
-		$xhtml_id = 'subnav';
-	}
-
-	$nav_markup_open = genesis_markup( array(
-		'html5'   => '<nav %s>',
-		'xhtml'   => '<div id="' . $xhtml_id . '">',
-		'context' => 'nav-' . $sanitized_location,
-		'echo'    => false,
-	) );
-	$nav_markup_open .= genesis_structural_wrap( 'menu-' . $sanitized_location, 'open', 0 );
-
+	$nav_markup_open = genesis_structural_wrap( 'menu-' . $sanitized_location, 'open', 0 );
 	$nav_markup_close  = genesis_structural_wrap( 'menu-' . $sanitized_location, 'close', 0 );
-	$nav_markup_close .= genesis_html5() ? '</nav>' : '</div>';
+	$params = array(
+		'theme_location' => $args['theme_location'],
+	);
 
-	$nav_output = $nav_markup_open . $nav . $nav_markup_close;
+	$nav_output = genesis_markup( array(
+		'open'    => '<nav %s>',
+		'close'   => '</nav>',
+		'context' => 'nav-' . $sanitized_location,
+		'content' => $nav_markup_open . $nav . $nav_markup_close,
+		'echo'    => false,
+		'params'  => $params,
+	) );
 
 	$filter_location = 'genesis_' . $sanitized_location . '_nav';
 
-	//* Handle back-compat for primary and secondary nav filters.
+	// Handle back-compat for primary and secondary nav filters.
 	if ( 'primary' === $args['theme_location'] ) {
 		$filter_location = 'genesis_do_nav';
 	} elseif ( 'secondary' === $args['theme_location'] ) {
@@ -147,8 +148,6 @@ function genesis_get_nav_menu( $args = array() ) {
  * Echo the output from `genesis_get_nav_menu()`.
  *
  * @since 2.1.0
- *
- * @uses genesis_get_nav_menu() Return the markup to display a menu consistent with the Genesis format.
  *
  * @param string $args Menu arguments.
  */

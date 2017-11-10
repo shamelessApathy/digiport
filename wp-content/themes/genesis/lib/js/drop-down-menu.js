@@ -10,12 +10,15 @@
  *  }
  *
  *  .menu .menu-item > a:focus + ul.sub-menu,
- *  .menu .menu-item.genesis-hover > ul.sub-menu {
+ *  .menu .menu-item.sfHover > ul.sub-menu {
  * 	  left: auto;
  * 	  opacity: 1;
  *  }
  *
-*/
+ * @package Genesis\JS
+ * @author  StudioPress
+ * @license GPL-2.0+
+ */
 
 var genesis_drop_down_menu = ( function( $ ) {
 	'use strict';
@@ -60,7 +63,7 @@ var genesis_drop_down_menu = ( function( $ ) {
 			.on( 'focus.genesis-hover blur.genesis-hover', menuItemToggleClass );
 	};
 
-	// Only expose the ready function to the world
+	// Only expose the ready function to the world.
 	return {
 		ready: ready
 	};

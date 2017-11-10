@@ -18,8 +18,6 @@ add_action( 'genesis_sidebar', 'genesis_do_sidebar' );
  * Only shows if sidebar is empty, and current user has the ability to edit theme options (manage widgets).
  *
  * @since 1.2.0
- *
- * @uses genesis_default_widget_area_content() Template for default widget are content.
  */
 function genesis_do_sidebar() {
 
@@ -36,8 +34,6 @@ add_action( 'genesis_sidebar_alt', 'genesis_do_sidebar_alt' );
  * Only shows if sidebar is empty, and current user has the ability to edit theme options (manage widgets).
  *
  * @since 1.2.0
- *
- * @uses genesis_default_widget_area_content() Template for default widget are content.
  */
 function genesis_do_sidebar_alt() {
 
@@ -56,7 +52,11 @@ function genesis_do_sidebar_alt() {
  */
 function genesis_default_widget_area_content( $name ) {
 
-	echo genesis_html5() ? '<section class="widget widget_text">' : '<div class="widget widget_text">';
+	genesis_markup( array(
+		'open'    => '<section class="widget widget_text">',
+		'context' => 'default-widget-content-wrap',
+	) );
+
 	echo '<div class="widget-wrap">';
 
 		$heading = ( genesis_a11y( 'headings' ) ? 'h3' : 'h4' );
@@ -69,6 +69,10 @@ function genesis_default_widget_area_content( $name ) {
 		echo '</p></div>';
 
 	echo '</div>';
-	echo genesis_html5() ? '</section>' : '</div>';
+
+	genesis_markup( array(
+		'close'   => '</section>',
+		'context' => 'default-widget-content-wrap',
+	) );
 
 }

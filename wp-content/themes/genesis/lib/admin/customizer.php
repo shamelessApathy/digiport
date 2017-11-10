@@ -23,14 +23,14 @@ abstract class Genesis_Customizer_Base {
 	 */
 	public function __construct() {
 
-		//* Register new customizer elements
+		// Register new customizer elements.
 		if ( method_exists( $this, 'register' ) ) {
 			add_action( 'customize_register', array( $this, 'register' ), 15 );
 		} else {
-			_doing_it_wrong( 'Genesis_Customizer_Base', __( 'When extending Genesis_Customizer_Base, you must create a register method.', 'genesis' ) );
+			_doing_it_wrong( 'Genesis_Customizer_Base', __( 'When extending Genesis_Customizer_Base, you must create a register method.', 'genesis' ), '2.1.0' );
 		}
 
-		//* Customizer scripts
+		// Customizer scripts.
 		if ( method_exists( $this, 'scripts' ) ) {
 			add_action( 'customize_preview_init', 'scripts' );
 		}
@@ -107,7 +107,10 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 		}
 
 		$this->color_scheme( $wp_customize );
-		$this->layout( $wp_customize );
+
+		if ( genesis_has_multiple_layouts() ) {
+			$this->layout( $wp_customize );
+		}
 
 		if ( current_theme_supports( 'genesis-breadcrumbs' ) ) {
 			$this->breadcrumbs( $wp_customize );
@@ -154,8 +157,8 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 	 *
 	 * @since 2.1.0
 	 *
-	 * @param WP_Customize_Manager $wp_customize WP_Customize_Manager instance.
-	 * @return Return early if the theme does not support genesis-style-selector.
+	 * @param WP_Customize_Manager $wp_customize `WP_Customize_Manager` instance.
+	 * @return void Return early if the theme does not support `genesis-style-selector`.
 	 */
 	private function color_scheme( $wp_customize ) {
 
@@ -273,10 +276,8 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 				}
 			}
 
-			if ( 'breadcrumb_home' == $setting ) {
-				if ( 'page' === get_option( 'show_on_front' ) ) {
-					continue;
-				}
+			if ( 'breadcrumb_home' == $setting && 'page' === get_option( 'show_on_front' ) ) {
+				continue;
 			}
 
 			$wp_customize->add_setting(
@@ -310,7 +311,6 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 	 * @since 2.1.0
 	 *
 	 * @param WP_Customize_Manager $wp_customize WP_Customize_Manager instance.
-	 * @return null Return early if the theme does not support genesis-style-selector.
 	 */
 	private function comments( $wp_customize ) {
 
@@ -371,7 +371,7 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 			)
 		);
 
-		//* Setting key and default value array
+		// Setting key and default value array.
 		$settings = array(
 			'content_archive'           => 'full',
 			'content_archive_limit'     => '',
@@ -393,6 +393,25 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 
 		}
 
+		/**
+		 * Filter available archive display options.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param array $args {
+		 *     Contains archive display options.
+		 *     @type string full     Entry content title.
+		 *     @type string excerpts Entry excerpts title.
+		 * }
+		 */
+		$archive_display = apply_filters(
+			'genesis_archive_display_options',
+			array(
+				'full'     => __( 'Entry content', 'genesis' ),
+				'excerpts' => __( 'Entry excerpts', 'genesis' ),
+			)
+		);
+
 		$wp_customize->add_control(
 			'genesis_content_archive',
 			array(
@@ -401,10 +420,7 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 				'section'  => 'genesis_archives',
 				'settings' => $this->get_field_name( 'content_archive' ),
 				'type'     => 'select',
-				'choices'  => array(
-					'full'     => __( 'Display post content', 'genesis' ),
-					'excerpts' => __( 'Display post excerpts', 'genesis' ),
-				),
+				'choices'  => $archive_display,
 			)
 		);
 
@@ -449,6 +465,7 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 					''           => __( '- None -', 'genesis' ),
 					'alignleft'  => __( 'Left', 'genesis' ),
 					'alignright' => __( 'Right', 'genesis' ),
+					'aligncenter' => __( 'Center', 'genesis' ),
 				),
 			)
 		);
@@ -456,7 +473,7 @@ class Genesis_Customizer extends Genesis_Customizer_Base {
 		$wp_customize->add_control(
 			'genesis_posts_nav',
 			array(
-				'label'    => __( 'Post Navigation Type', 'genesis' ),
+				'label'    => __( 'Entry Pagination Type', 'genesis' ),
 				'section'  => 'genesis_archives',
 				'settings' => $this->get_field_name( 'posts_nav' ),
 				'type'     => 'select',

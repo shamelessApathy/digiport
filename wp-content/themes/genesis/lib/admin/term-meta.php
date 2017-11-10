@@ -16,15 +16,15 @@
  *
  * @since 2.2.6
  *
- * @return array Array of default term meta.
+ * @return array Default term meta values.
  */
 function genesis_term_meta_defaults() {
 
 	return apply_filters( 'genesis_term_meta_defaults', array(
 		'headline'            => '',
 		'intro_text'          => '',
-		'display_title'       => 0, //* vestigial
-		'display_description' => 0, //* vestigial
+		'display_title'       => 0, // Vestigial.
+		'display_description' => 0, // Vestigial.
 		'doctitle'            => '',
 		'description'         => '',
 		'keywords'            => '',
@@ -66,28 +66,7 @@ function genesis_add_taxonomy_archive_options() {
  */
 function genesis_taxonomy_archive_options( $tag, $taxonomy ) {
 
-	$tax = get_taxonomy( $taxonomy );
-	?>
-	<h3><?php echo esc_html( $tax->labels->singular_name ) . ' ' . __( 'Archive Settings', 'genesis' ); ?></h3>
-	<table class="form-table">
-		<tbody>
-			<tr class="form-field">
-				<th scope="row"><label for="genesis-meta[headline]"><?php _e( 'Archive Headline', 'genesis' ); ?></label></th>
-				<td>
-					<input name="genesis-meta[headline]" id="genesis-meta[headline]" type="text" value="<?php echo esc_attr( get_term_meta( $tag->term_id, 'headline', true ) ); ?>" size="40" />
-					<p class="description"><?php _e( 'Leave empty if you do not want to display a headline.', 'genesis' ); ?></p>
-				</td>
-			</tr>
-			<tr class="form-field">
-				<th scope="row"><label for="genesis-meta[intro_text]"><?php _e( 'Archive Intro Text', 'genesis' ); ?></label></th>
-				<td>
-					<textarea name="genesis-meta[intro_text]" id="genesis-meta[intro_text]" rows="5" cols="50" class="large-text"><?php echo esc_textarea( get_term_meta( $tag->term_id, 'intro_text', true ) ); ?></textarea>
-					<p class="description"><?php _e( 'Leave empty if you do not want to display any intro text.', 'genesis' ); ?></p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<?php
+	genesis_meta_boxes()->show_meta_box( 'genesis-term-meta-settings', $tag );
 
 }
 
@@ -101,8 +80,9 @@ add_action( 'admin_init', 'genesis_add_taxonomy_seo_options' );
  */
 function genesis_add_taxonomy_seo_options() {
 
-	foreach ( get_taxonomies( array( 'public' => true ) ) as $tax_name )
+	foreach ( get_taxonomies( array( 'public' => true ) ) as $tax_name ) {
 		add_action( $tax_name . '_edit_form', 'genesis_taxonomy_seo_options', 10, 2 );
+	}
 
 }
 
@@ -120,48 +100,7 @@ function genesis_add_taxonomy_seo_options() {
  */
 function genesis_taxonomy_seo_options( $tag, $taxonomy ) {
 
-	?>
-	<h3><?php _e( 'Theme SEO Settings', 'genesis' ); ?></h3>
-	<table class="form-table">
-		<tbody>
-			<tr class="form-field">
-				<th scope="row"><label for="genesis-meta[doctitle]"><?php _e( 'Custom Document Title', 'genesis' ); ?></label></th>
-				<td>
-					<input name="genesis-meta[doctitle]" id="genesis-meta[doctitle]" type="text" value="<?php echo esc_attr( get_term_meta( $tag->term_id, 'doctitle', true ) ); ?>" size="40" />
-				</td>
-			</tr>
-
-			<tr class="form-field">
-				<th scope="row"><label for="genesis-meta[description]"><?php _e( 'Meta Description', 'genesis' ); ?></label></th>
-				<td>
-					<textarea name="genesis-meta[description]" id="genesis-meta[description]" rows="5" cols="50" class="large-text"><?php echo esc_html( get_term_meta( $tag->term_id, 'description', true ) ); ?></textarea>
-				</td>
-			</tr>
-
-			<tr class="form-field">
-				<th scope="row"><label for="genesis-meta[keywords]"><?php _e( 'Meta Keywords', 'genesis' ); ?></label></th>
-				<td>
-					<input name="genesis-meta[keywords]" id="genesis-meta[keywords]" type="text" value="<?php echo esc_attr( get_term_meta( $tag->term_id, 'keywords', true ) ); ?>" size="40" />
-					<p class="description"><?php _e( 'Comma separated list', 'genesis' ); ?></p>
-				</td>
-			</tr>
-
-			<tr>
-				<th scope="row"><?php _e( 'Robots Meta', 'genesis' ); ?></th>
-				<td>
-					<label for="genesis-meta[noindex]"><input name="genesis-meta[noindex]" id="genesis-meta[noindex]" type="checkbox" value="1" <?php checked( get_term_meta( $tag->term_id, 'noindex', true ) ); ?> />
-					<?php printf( __( 'Apply %s to this archive?', 'genesis' ), genesis_code( 'noindex' ) ); ?></label><br />
-
-					<label for="genesis-meta[nofollow]"><input name="genesis-meta[nofollow]" id="genesis-meta[nofollow]" type="checkbox" value="1" <?php checked( get_term_meta( $tag->term_id, 'nofollow', true ) ); ?> />
-					<?php printf( __( 'Apply %s to this archive?', 'genesis' ), genesis_code( 'nofollow' ) ); ?></label><br />
-
-					<label for="genesis-meta[noarchive]"><input name="genesis-meta[noarchive]" id="genesis-meta[noarchive]" type="checkbox" value="1" <?php checked( get_term_meta( $tag->term_id, 'noarchive', true ) ); ?> />
-					<?php printf( __( 'Apply %s to this archive?', 'genesis' ), genesis_code( 'noarchive' ) ); ?></label>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<?php
+	genesis_meta_boxes()->show_meta_box( 'genesis-term-meta-seo', $tag );
 
 }
 
@@ -179,6 +118,10 @@ function genesis_add_taxonomy_layout_options() {
 		return;
 	}
 
+	if ( ! genesis_has_multiple_layouts() ) {
+		return;
+	}
+
 	foreach ( get_taxonomies( array( 'public' => true ) ) as $tax_name ) {
 		add_action( $tax_name . '_edit_form', 'genesis_taxonomy_layout_options', 10, 2 );
 	}
@@ -190,8 +133,6 @@ function genesis_add_taxonomy_layout_options() {
  *
  * @since 1.4.0
  *
- * @uses genesis_layout_selector() Layout selector.
- *
  * @see genesis_add_taxonomy_layout_options() Callback caller.
  *
  * @param \stdClass $tag      Term object.
@@ -199,26 +140,7 @@ function genesis_add_taxonomy_layout_options() {
  */
 function genesis_taxonomy_layout_options( $tag, $taxonomy ) {
 
-	?>
-	<h3><?php _e( 'Layout Settings', 'genesis' ); ?></h3>
-
-	<table class="form-table">
-		<tbody>
-			<tr>
-				<th scope="row"><?php _e( 'Choose Layout', 'genesis' ); ?></th>
-				<td>
-					<fieldset class="genesis-layout-selector">
-						<legend class="screen-reader-text"><?php _e( 'Choose Layout', 'genesis' ); ?></legend>
-
-						<p><input type="radio" class="default-layout" name="genesis-meta[layout]" id="default-layout" value="" <?php checked( get_term_meta( $tag->term_id, 'layout', true ), '' ); ?> /> <label for="default-layout" class="default"><?php printf( __( 'Default Layout set in <a href="%s">Theme Settings</a>', 'genesis' ), menu_page_url( 'genesis', 0 ) ); ?></label></p>
-						<?php genesis_layout_selector( array( 'name' => 'genesis-meta[layout]', 'selected' => get_term_meta( $tag->term_id, 'layout', true ), 'type' => 'site' ) ); ?>
-
-					</fieldset>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<?php
+	genesis_meta_boxes()->show_meta_box( 'genesis-term-meta-layout', $tag );
 
 }
 
@@ -226,64 +148,28 @@ add_filter( 'get_term', 'genesis_get_term_filter', 10, 2 );
 /**
  * For backward compatibility only.
  *
- * Filter each term, pulling term meta automatically so it can be accessed directly by the term object.
- *
- * Applies `genesis_term_meta_defaults`, `genesis_term_meta_{field}` and `genesis_term_meta` filters.
+ * Sets $term->meta to empty array. All calls to $term->meta->key will be unset unless force set by `genesis_term_meta` filter.
  *
  * @since 1.2.0
  *
  * @param object $term     Database row object.
  * @param string $taxonomy Taxonomy name that $term is part of.
- *
- * @return object $term Database row object.
+ * @return object Database row object.
  */
 function genesis_get_term_filter( $term, $taxonomy ) {
 
-	//* Do nothing, if $term is not object
+	// Do nothing, if $term is not object.
 	if ( ! is_object( $term ) ) {
 		return $term;
 	}
 
-	//* Do nothing, if called in the context of creating a term via an ajax call
+	// Do nothing, if called in the context of creating a term via an ajax call.
 	if ( did_action( 'wp_ajax_add-tag' ) ) {
 		return $term;
 	}
 
-	//* Pull all meta for this term ID
-	$term_meta = get_term_meta( $term->term_id );
-
-	//* Convert array values to string
-	foreach ( (array) $term_meta as $key => $value ) {
-		$term_meta[ $key ] = $value[0];
-	}
-
-	$term->meta = wp_parse_args( $term_meta, genesis_term_meta_defaults() );
-
-	//* Sanitize term meta
-	foreach ( $term->meta as $field => $value ) {
-
-		if ( is_array( $value ) ) {
-			$value = stripslashes_deep( array_filter( $value, 'wp_kses_decode_entities' ) );
-		} else {
-			$value = stripslashes( wp_kses_decode_entities( $value ) );
-		}
-
-		/**
-		 * Term meta value filter.
-		 *
-		 * Allow term meta value to be filtered before being injected into the $term->meta array.
-		 *
-		 * @since
-		 *
-		 * @param string|array  $value The term meta value.
-		 * @param string  $term The term that is being filtered.
-		 * @param string  $taxonomy The taxonomy to which the term belongs.
-		 */
-		$term->meta[ $field ] = apply_filters( "genesis_term_meta_{$field}", $value, $term, $taxonomy );
-
-	}
-
-	$term->meta = apply_filters( 'genesis_term_meta', $term->meta, $term, $taxonomy );
+	// Still set $term->meta and apply filter, for backward compatibility.
+	$term->meta = apply_filters( 'genesis_term_meta', array(), $term, $taxonomy );
 
 	return $term;
 
@@ -297,16 +183,33 @@ add_filter( 'get_terms', 'genesis_get_terms_filter', 10, 2 );
  *
  * @param array  $terms    Database row objects.
  * @param string $taxonomy Taxonomy name that $terms are part of.
- *
- * @return array $terms Database row objects.
+ * @return array Database row objects.
  */
 function genesis_get_terms_filter( array $terms, $taxonomy ) {
 
-	foreach( $terms as $term ) {
-		$term = genesis_get_term_filter( $term, $taxonomy );
+	foreach( $terms as $key => $term ) {
+		$terms[ $key ] = genesis_get_term_filter( $term, $taxonomy );
 	}
 
 	return $terms;
+
+}
+
+add_filter( 'get_term_metadata', 'genesis_term_meta_filter', 10, 4 );
+/**
+ * Maintain backward compatibility with the older `genesis_term_meta_{$key}` filter so old filter functions will still work.
+ *
+ * @since 2.3.0
+ *
+ * @param string|array $value     The term meta value.
+ * @param int          $object_id The term ID.
+ * @param string       $meta_key  Meta key.
+ * @param bool         $single    Whether to return only the first value of the specified $meta_key.
+ * @return mixed Filtered term meta value.
+ */
+function genesis_term_meta_filter( $value, $object_id, $meta_key, $single ) {
+
+	return apply_filters( "genesis_term_meta_{$meta_key}", $value, get_term_field( 'slug', $object_id ), null );
 
 }
 
@@ -318,10 +221,8 @@ add_action( 'edit_term', 'genesis_term_meta_save', 10, 2 );
  *
  * @since 1.2.0
  *
- * @uses genesis_formatting_kses() Genesis whitelist for wp_kses.
- *
- * @param integer $term_id Term ID.
- * @param integer $tt_id   Term Taxonomy ID.
+ * @param int $term_id Term ID.
+ * @param int $tt_id   Term Taxonomy ID.
  */
 function genesis_term_meta_save( $term_id, $tt_id ) {
 
@@ -333,8 +234,9 @@ function genesis_term_meta_save( $term_id, $tt_id ) {
 
 	$values = wp_parse_args( $values, genesis_term_meta_defaults() );
 
-	if ( ! current_user_can( 'unfiltered_html' ) && isset( $values['archive_description'] ) )
+	if ( isset( $values['archive_description'] ) && ! current_user_can( 'unfiltered_html' ) ) {
 		$values['archive_description'] = genesis_formatting_kses( $values['archive_description'] );
+	}
 
 	foreach ( $values as $key => $value ) {
 		update_term_meta( $term_id, $key, $value );
@@ -350,8 +252,8 @@ add_action( 'delete_term', 'genesis_term_meta_delete', 10, 2 );
  *
  * @since 1.2.0
  *
- * @param integer $term_id Term ID.
- * @param integer $tt_id   Taxonomy Term ID.
+ * @param int $term_id Term ID.
+ * @param int $tt_id   Taxonomy Term ID.
  */
 function genesis_term_meta_delete( $term_id, $tt_id ) {
 
@@ -369,9 +271,8 @@ add_action( 'split_shared_term', 'genesis_split_shared_term' );
  *
  * @since 2.2.0
  *
- * @param integer @old_term_id The ID of the term being split.
- * @param integer @new_term_id The ID of the newly created term.
- *
+ * @param int $old_term_id The ID of the term being split.
+ * @param int $new_term_id The ID of the newly created term.
  */
 function genesis_split_shared_term( $old_term_id, $new_term_id ) {
 
