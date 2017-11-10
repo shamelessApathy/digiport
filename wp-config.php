@@ -26,7 +26,7 @@ define('DB_NAME', 'digiport');
 define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'proline55');
+define('DB_PASSWORD', 'Poke8112');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
