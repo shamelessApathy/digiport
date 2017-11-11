@@ -24,6 +24,10 @@
   margin:0 auto;
   margin-top:50px;
 }
+.fp-section h4,p
+{
+  text-align:center;
+}
 .fp-img-holder
 {
   width:100%;
