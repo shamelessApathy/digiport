@@ -1,15 +1,3 @@
-
-<meta property="og:title" content=“SLCUtahDesign” />
-
-<meta property="og:type" content="article" />
-
-<meta property="og:description" content=“Modern Web Development and Technology Solutions” />
-
-<meta property="og:image" content="http://slcutahdesign.com/wp-content/uploads/2017/11/slcutahdesign_logo-sm.jpg" />
-
-<meta property="og:url" content=“http://slcutahdesign.com” />
-
-<meta property="og:site_name" content=“SLCUtahDesign” />
 <?php
 /**
  * Genesis Framework.

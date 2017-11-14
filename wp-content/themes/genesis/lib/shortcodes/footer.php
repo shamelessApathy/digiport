@@ -114,19 +114,7 @@ add_shortcode( 'footer_childtheme_link', 'genesis_footer_childtheme_link_shortco
  */
 function genesis_footer_childtheme_link_shortcode( $atts ) {
 
-	if ( ! defined( 'CHILD_THEME_NAME' ) || ! defined( 'CHILD_THEME_URL' ) || ! is_child_theme() ) {
-		return null;
-	}
-
-	$defaults = array(
-		'after'  => '',
-		'before' => '&#x000B7;',
-	);
-	$atts = shortcode_atts( $defaults, $atts, 'footer_childtheme_link' );
-
-	$output = sprintf( '%s<a href="%s">%s</a>%s', $atts['before'], esc_url( CHILD_THEME_URL ), esc_html( CHILD_THEME_NAME ), $atts['after'] );
-
-	return apply_filters( 'genesis_footer_childtheme_link_shortcode', $output, $atts );
+return "SLCUtahDesign";
 
 }
 
@@ -147,16 +135,7 @@ add_shortcode( 'footer_genesis_link', 'genesis_footer_genesis_link_shortcode' );
  */
 function genesis_footer_genesis_link_shortcode( $atts ) {
 
-	$defaults = array(
-		'after'  => '',
-		'before' => '',
-		'url'    => 'http://my.studiopress.com/themes/genesis/',
-	);
-	$atts = shortcode_atts( $defaults, $atts, 'footer_genesis_link' );
-
-	$output = $atts['before'] . '<a href="' . esc_url( $atts['url'] ) . '">Genesis Framework</a>' . $atts['after'];
-
-	return apply_filters( 'genesis_footer_genesis_link_shortcode', $output, $atts );
+return "Modern Web Development";
 
 }
 
@@ -177,15 +156,7 @@ add_shortcode( 'footer_studiopress_link', 'genesis_footer_studiopress_link_short
  */
 function genesis_footer_studiopress_link_shortcode( $atts ) {
 
-	$defaults = array(
-		'after'  => '',
-		'before' => __( 'by', 'genesis' ),
-	);
-	$atts = shortcode_atts( $defaults, $atts, 'footer_studiopress_link' );
-
-	$output = $atts['before'] . ' <a href="http://www.studiopress.com/">StudioPress</a>' . $atts['after'];
-
-	return apply_filters( 'genesis_footer_studiopress_link_shortcode', $output, $atts );
+return "justSIX";
 
 }
 
@@ -206,15 +177,7 @@ add_shortcode( 'footer_wordpress_link', 'genesis_footer_wordpress_link_shortcode
  */
 function genesis_footer_wordpress_link_shortcode( $atts ) {
 
-	$defaults = array(
-		'after'  => '',
-		'before' => '',
-	);
-	$atts = shortcode_atts( $defaults, $atts, 'footer_wordpress_link' );
-
-	$output = sprintf( '%s<a href="%s">%s</a>%s', $atts['before'], 'http://wordpress.org/', 'WordPress', $atts['after'] );
-
-	return apply_filters( 'genesis_footer_wordpress_link_shortcode', $output, $atts );
+return "";
 
 }
 
@@ -235,15 +198,7 @@ add_shortcode( 'footer_site_title', 'genesis_footer_site_title_shortcode' );
  */
 function genesis_footer_site_title_shortcode( $atts ) {
 
-	$defaults = array(
-		'after'  => '',
-		'before' => '',
-	);
-	$atts = shortcode_atts( $defaults, $atts, 'footer_site_title' );
-
-	$output = $atts['before'] . get_bloginfo( 'name' ) . $atts['after'];
-
-	return apply_filters( 'genesis_footer_site_title_shortcode', $output, $atts );
+	return "justONE";
 
 }
 
@@ -265,16 +220,7 @@ add_shortcode( 'footer_home_link', 'genesis_footer_home_link_shortcode' );
  */
 function genesis_footer_home_link_shortcode( $atts ) {
 
-	$defaults = array(
-		'after'  => '',
-		'before' => '',
-		'text'   => get_bloginfo( 'name' ),
-	);
-	$atts = shortcode_atts( $defaults, $atts, 'footer_home_link' );
-
-	$output = sprintf( '%s<a href="%s">%s</a>%s', $atts['before'], home_url(), $atts['text'], $atts['after'] );
-
-	return apply_filters( 'genesis_footer_home_link_shortcode', $output, $atts );
+return "justTWO";
 
 }
 
@@ -296,21 +242,6 @@ add_shortcode( 'footer_loginout', 'genesis_footer_loginout_shortcode' );
  */
 function genesis_footer_loginout_shortcode( $atts ) {
 
-	$defaults = array(
-		'after'    => '',
-		'before'   => '',
-		'redirect' => '',
-	);
-	$atts = shortcode_atts( $defaults, $atts, 'footer_loginout' );
-
-	if ( ! is_user_logged_in() ) {
-		$link = '<a href="' . esc_url( wp_login_url( $atts['redirect'] ) ) . '">' . __( 'Log in', 'genesis' ) . '</a>';
-	} else {
-		$link = '<a href="' . esc_url( wp_logout_url( $atts['redirect'] ) ) . '">' . __( 'Log out', 'genesis' ) . '</a>';
-	}
-
-	$output = $atts['before'] . apply_filters( 'loginout', $link ) . $atts['after'];
-
-	return apply_filters( 'genesis_footer_loginout_shortcode', $output, $atts );
+return "";
 
 }
