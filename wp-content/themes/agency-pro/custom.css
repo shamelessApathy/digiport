@@ -42,6 +42,11 @@
 {
   text-align:center;
 }
+.fp-section p
+{
+  font-weight:700;
+  font-size:18px;
+}
 .description-holder
 {
   width:100%;
